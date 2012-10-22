@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta http-equiv="Content-type" content="text/html; charset=UTF-8" />
+
+  <title>Backtime - Realtime twitter feed</title>
+
+  <link type="text/css" rel="stylesheet" href="./css/style.css" media="screen">
+
+  <script type="text/javascript" src="./js/jquery-1.7.2.min.js"></script>
+  <script type="text/javascript" src="./socket.io/socket.io.js"></script>
+  <script type="text/javascript" src="./js/backtime.js"></script>
+</head>
+<body>
+  <div id="wrapper">
+    <h1>Searching for: <span id="query"></span></h1>
+    <div id="tweets"><ul></ul></div>
+    <div id="stats">
+      Search:
+      <input type="text" name="search" id="search" /><br />
+      <span id="speed">0</span> tweets/sec (Max: <span id="maxSpeed">0</span> )<br />
+      Limit
+      <select name="limit" id="limit">
+        <option value="0">Infinite</option>
+        <option value="1">1</option>
+        <option value="3">3</option>
+        <option value="5">5</option>
+        <option value="10">10</option>
+        <option value="25" selected>25</option>
+        <option value="50">50</option>
+      </select><br /><br />
+      &copy; 2012 Made by <a href="https://github.com/Fabryz" target="_blank">Fabrizio Codello</a>, thanks to <a href="https://github.com/danzajdband" target="_blank">Dan Zajdband</a>
+    </div>
+  </div>
+</body>
+</html>
