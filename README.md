@@ -1,11 +1,11 @@
 Backtime
 ========
 
-Show all the images attached in a tweet post that contains a certain hashtag
+Realtime twitter stream
 
 Using the [Twitter Streaming API](https://dev.twitter.com/docs/streaming-api/methods) with Node.js, Express.js, Socket.io and jQuery
 
-Live app: [http://tweemages.nodejitsu.com](http://tweemages.nodejitsu.com)
+Live app: [http://backtime.nodejitsu.com](http://backtime.nodejitsu.com)
 
 Requirements
 ------------
@@ -22,12 +22,12 @@ Modules:
 Installation
 ------------
 
-1. Clone the repository with ``git clone git://github.com/Fabryz/tweemages.git``
+1. Clone the repository with ``git clone git://github.com/Fabryz/backtime.git``
 2. Install dependencies with ``npm install``
 3. Create ``/configs/twitter.json`` with your twitter application credentials
 4. Start the server with ``node server.js``
 5. Point your browser to ``YOUR_SERVER_IP:8080``
-6. Use 1, 2, 3, 4 to choose a different size. Use Space to clear the screen.
+6. Change the keywords to track
 
 Contributors
 ------------
