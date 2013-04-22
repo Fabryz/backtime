@@ -1,19 +1,22 @@
 var express = require('express'),
-	fs = require('fs'),
-	Tuiter = require('tuiter'),
-	app = module.exports = express.createServer();
+    socketio = require('socket.io'),
+    http = require('http'),
+    path = require('path'),
+    fs = require('fs'),
+    Tuiter = require('tuiter');
+
+var app = express();
 
 /*
 * Configurations
 */
 
 app.configure(function(){
-    app.use(express.bodyParser());
-    app.use(express.methodOverride());
-    app.use(app.router);
-    app.use(express.static(__dirname + '/public'));
-    app.use(express.logger(':remote-addr - :method :url HTTP/:http-version :status :res[content-length] - :response-time ms'));
+    app.set('port', process.env.PORT || 8080);
     app.use(express.favicon());
+    app.use(express.logger('short'));
+    app.use(app.router);
+    app.use(express.static(path.join(__dirname, 'public')));
 });
 
 app.configure('development', function(){
@@ -38,7 +41,7 @@ function secondsToString(seconds) {
 }
 
 app.get('/', function(req, res) {
-	res.sendfile('index.html');
+	res.sendfile('public/index.html');
 });
 
 app.get('/uptime', function(req, res) {
@@ -65,8 +68,9 @@ var stream = '',
 	streamInterval = '',
 	configs = '';
 
-app.listen(8080);
-console.log("* Express server listening in %s mode", app.settings.env);
+var server = http.createServer(app).listen(app.get('port'), function(){
+  console.log("Express server listening on port "+ app.get('port') +" in "+ app.get('env') +" mode.");
+});
 
 configs = readConfigs();
 console.log("* Param: "+ configs.param +", value: "+ configs.value);
@@ -85,7 +89,7 @@ console.log("* Param: "+ configs.param +", value: "+ configs.value);
 // return require("./filename-with-no-extension"); could be used
 function readJSONFile(filename) {
 	var JSONFile = "";
-	
+
 	try {
 		JSONFile = JSON.parse(fs.readFileSync(__dirname +'/'+ filename, 'utf8'));
 	} catch(e) {
@@ -132,7 +136,7 @@ function configureStream() {
 		"access_token_secret" : configs.twitterApp.access_token_secret
 	});
 }
-	
+
 // Using Twitter Streaming API
 function grabTwitterFeed() {
 	configureStream();
@@ -161,7 +165,7 @@ function grabTwitterFeed() {
 
 		feed.on('error', function(err) {
 			console.log("Error: "+ JSON.stringify(err));
-			
+
 			fs.open(__dirname +'/errors.log', 'a', 666, function(e, id) {
 				if (e) console.log("Error while opening: "+ e);
 
@@ -177,7 +181,7 @@ function grabTwitterFeed() {
 * Socket.io
 */
 
-var io = require('socket.io').listen(app);
+var io = socketio.listen(server);
 
 io.configure(function() {
 	io.enable('browser client minification');
@@ -209,7 +213,7 @@ io.sockets.on('connection', function(client) {
 		totUsers--;
 		console.log('- User '+ client.id +' disconnected, total users: '+ totUsers);
 
-		if (totUsers === 0) {
+		if (totUsers === 0) { // Deactivate the stream if nobody is online
 			stream = '';
 		}
 
