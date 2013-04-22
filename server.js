@@ -41,7 +41,7 @@ function secondsToString(seconds) {
 }
 
 app.get('/', function(req, res) {
-	res.sendfile('public/index.html');
+	res.sendfile(path.join('public', 'index.html'));
 });
 
 app.get('/uptime', function(req, res) {
@@ -65,6 +65,7 @@ app.get('/restart', function(req, res) {
 var	totUsers = 0;
 
 var stream = '',
+	globalFeed = '',
 	streamInterval = '',
 	configs = '';
 
@@ -156,6 +157,7 @@ function grabTwitterFeed() {
 	// });
 
 	stream.filter({ track: configs.value.split(",") }, function(feed) {
+		globalFeed = feed;
 
 		console.log("* Stream started");
 
@@ -167,7 +169,9 @@ function grabTwitterFeed() {
 			console.log("Error: "+ JSON.stringify(err));
 
 			fs.open(__dirname +'/errors.log', 'a', 666, function(e, id) {
-				if (e) console.log("Error while opening: "+ e);
+				if (e) {
+					console.log("Error while opening: "+ e);
+				}
 
 				fs.write(id, new Date().toJSON() +" "+ JSON.stringify(err) +"\n", null, 'utf8', function() {
 					fs.close(id);
@@ -204,7 +208,8 @@ io.sockets.on('connection', function(client) {
 		configs.value = data.search;
 		console.log("> Received new search param: "+ data.search);
 
-		restartTwitterFeed();
+		//restartTwitterFeed();
+		globalFeed.emit('reconnect', { track: configs.value.split(",") });
 
 		io.sockets.emit("filters", { param: configs.param, value: configs.value });
 	});
