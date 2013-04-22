@@ -5,8 +5,6 @@ Realtime twitter stream
 
 Using the [Twitter Streaming API](https://dev.twitter.com/docs/streaming-api/methods) with Node.js, Express.js, Socket.io and jQuery
 
-Live app: [http://backtime.nodejitsu.com](http://backtime.nodejitsu.com)
-
 Requirements
 ------------
 
@@ -37,7 +35,7 @@ Contributors
 License
 -------
 
-Copyright (C) 2012 Fabrizio Codello
+Copyright (C) 2013 Fabrizio Codello
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
