@@ -166,9 +166,16 @@ function grabTwitterFeed() {
 		});
 
 		feed.on('error', function(stream_err) {
+			var line = "";
 			console.log("Stream ERR: "+ stream_err);
 
-			var line = new Date().toJSON() +" "+ stream_err;
+			var hasBadToken = new RegExp('\\bBad Token\\b');
+			if (!hasBadToken.test(stream_err)) {
+				line = new Date().toJSON() +" "+ stream_err;
+			} else {
+				line = new Date().toJSON() +" Bad token";
+			}
+
 			fs.open(path.join(__dirname, 'errors.log'), 'a', 0666, function(err, fd) {
 				fs.write(fd, line, null, undefined, function (err, written) {
 					// console.log(written +"B written.");
