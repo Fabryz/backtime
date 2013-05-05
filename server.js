@@ -78,7 +78,7 @@ console.log("* Param: "+ configs.param +", value: "+ configs.value);
 
 // streamInterval = setInterval(function() {
 // 	if (stream !== '') {
-		restartTwitterFeed();
+//      restartTwitterFeed();
 // 		console.log("* Stream autorestarted after 5 minutes");
 // 	}
 // }, 300000); // 5 mins
