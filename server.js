@@ -165,18 +165,18 @@ function grabTwitterFeed() {
 			io.sockets.emit("tweet", strencode(tweet));
 		});
 
-		feed.on('error', function(err) {
-			console.log("Error: "+ JSON.stringify(err));
+		feed.on('error', function(stream_err) {
+			console.log("Stream ERR: "+ stream_err);
 
-			fs.open(__dirname +'/errors.log', 'a', 666, function(e, id) {
-				if (e) {
-					console.log("Error while opening: "+ e);
-				}
+			var line = new Date().toJSON() +" "+ stream_err;
+			fs.open(path.join(__dirname, 'errors.log'), 'a', 0666, function(err, fd) {
+				fs.write(fd, line, null, undefined, function (err, written) {
+					// console.log(written +"B written.");
 
-				fs.write(id, new Date().toJSON() +" "+ JSON.stringify(err) +"\n", null, 'utf8', function() {
-					fs.close(id);
+					fs.close(fd);
 				});
 			});
+
 		});
 	});
 }
