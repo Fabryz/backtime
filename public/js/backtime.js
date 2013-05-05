@@ -53,6 +53,13 @@ $(document).ready(function() {
 
         calcMaxPerSecond();
         showMaxTweets = limit.val();
+
+        map = new GMaps({
+            div: '#map',
+            lat: 45.667,
+            lng: 12.245,
+            zoom: 2
+        });
     }
 
     function calcMaxPerSecond() {
@@ -86,7 +93,8 @@ $(document).ready(function() {
         tweetsAmount = 0,
         maxTweetsAmount = 0,
         isTyping = false,
-        showMaxTweets = 0;
+        showMaxTweets = 0,
+        map = null;
 
     init();
 
@@ -124,13 +132,29 @@ $(document).ready(function() {
     socket.on('tweet', function(tweet) {
         tweet = strdecode(tweet);
 
-        if (showMaxTweets !== 0) { // != infinite list
+        if (showMaxTweets !== 0) { // 0 -> infinite list
             if (tweets.find("li").length + 1 > showMaxTweets ) {
                 tweets.find("li:last").remove();
             }
         }
         // tweets.prepend('<li><img id="avatar" src="'+ tweet.user.profile_image_url +'" alt="" width="48" height="48" /> '+ tweet.created_at +' <strong><a href="http://www.twitter.com/'+ tweet.user.screen_name +'" title="Open profile" target="_blank">'+ tweet.user.screen_name +'</a></strong>: '+ convertURLs(tweet.text) +' (Retweets: '+ tweet.retweet_count +')</li>');
-        tweets.prepend('<li>'+ tweet.created_at +' <strong><a href="http://www.twitter.com/'+ tweet.user.screen_name +'" title="Open profile" target="_blank">'+ tweet.user.screen_name +'</a></strong>: '+ convertURLs(tweet.text) +' (Retweets: '+ tweet.retweet_count +')</li>');
+        // tweets.prepend('<li>'+ tweet.created_at +' <strong><a href="http://www.twitter.com/'+ tweet.user.screen_name +'" title="Open profile" target="_blank">'+ tweet.user.screen_name +'</a></strong>: '+ convertURLs(tweet.text) +' (Retweets: '+ tweet.retweet_count +')</li>');
+
+        // Assume incoming tweets have geo info
+        // tweets.prepend('<li>'+ JSON.stringify(tweet.geo) +'</li>');
+
+        map.addMarker({
+            lat: tweet.geo.coordinates[0],
+            lng: tweet.geo.coordinates[1],
+            title: 'Marker with InfoWindow',
+            infoWindow: {
+                content: ''+ tweet.created_at +'<br/><strong><a href="http://www.twitter.com/'+ tweet.user.screen_name +'" title="Open profile" target="_blank">'+ tweet.user.screen_name +'</a></strong>: '+ convertURLs(tweet.text) +'<br/>(Retweets: '+ tweet.retweet_count +')'
+            }
+        });
+
+        map.setZoom(15);
+        map.setCenter(tweet.geo.coordinates[0], tweet.geo.coordinates[1]);
+        map.fitZoom();
 
         tweetsAmount++;
     });

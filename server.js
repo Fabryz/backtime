@@ -126,7 +126,7 @@ function strencode(data) {
 function restartTwitterFeed() {
 	stream = '';
 	grabTwitterFeed();
-	console.log("* Stream restarted");
+	console.log(new Date().toJSON() +"* Stream restarted");
 }
 
 function configureStream() {
@@ -159,21 +159,24 @@ function grabTwitterFeed() {
 	stream.filter({ track: configs.value.split(",") }, function(feed) {
 		globalFeed = feed;
 
-		console.log("* Stream started");
+		console.log(new Date().toJSON() +"* Stream started");
 
 		feed.on('tweet', function(tweet) {
-			io.sockets.emit("tweet", strencode(tweet));
+			// Send only tweets with geo info
+			if (tweet.geo) {
+				io.sockets.emit("tweet", strencode(tweet));
+			}
 		});
 
 		feed.on('error', function(stream_err) {
 			var line = "";
 			console.log("Stream ERR: "+ stream_err);
 
-			var hasBadToken = new RegExp('\\bBad Token\\b');
+			var hasBadToken = new RegExp('\\bBad token\\b');
 			if (!hasBadToken.test(stream_err)) {
 				line = new Date().toJSON() +" "+ stream_err;
 			} else {
-				line = new Date().toJSON() +" Bad token";
+				line = new Date().toJSON() +" Bad token\n";
 			}
 
 			fs.open(path.join(__dirname, 'errors.log'), 'a', 0666, function(err, fd) {
@@ -182,6 +185,7 @@ function grabTwitterFeed() {
 
 					fs.close(fd);
 				});
+
 			});
 
 		});
