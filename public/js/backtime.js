@@ -150,7 +150,8 @@ $(document).ready(function() {
             title: 'Click to see the Tweet',
             infoWindow: {
                 content: '<img id="avatar" src="'+ tweet.user.profile_image_url +'" alt="" width="48" height="48" /><strong><a href="http://www.twitter.com/'+ tweet.user.screen_name +'" title="Open profile" target="_blank">'+ tweet.user.screen_name +'</a></strong>: '+ convertURLs(tweet.text) +'<br/><br style="clear:both;"/>'+ tweet.created_at +' (Retweets: '+ tweet.retweet_count +')'
-            }
+            },
+            animation: google.maps.Animation.DROP
         });
 
         // map.setZoom(15);
