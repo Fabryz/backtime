@@ -23,6 +23,7 @@ $(document).ready(function() {
         });
 
         limit.on('change', function() {
+            map.removeMarkers();
             tweets.html('');
             showMaxTweets = limit.val();
         });
