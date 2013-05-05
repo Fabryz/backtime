@@ -146,15 +146,15 @@ $(document).ready(function() {
         map.addMarker({
             lat: tweet.geo.coordinates[0],
             lng: tweet.geo.coordinates[1],
-            title: 'Marker with InfoWindow',
+            title: 'Click to see the Tweet',
             infoWindow: {
-                content: ''+ tweet.created_at +'<br/><strong><a href="http://www.twitter.com/'+ tweet.user.screen_name +'" title="Open profile" target="_blank">'+ tweet.user.screen_name +'</a></strong>: '+ convertURLs(tweet.text) +'<br/>(Retweets: '+ tweet.retweet_count +')'
+                content: '<img id="avatar" src="'+ tweet.user.profile_image_url +'" alt="" width="48" height="48" /><strong><a href="http://www.twitter.com/'+ tweet.user.screen_name +'" title="Open profile" target="_blank">'+ tweet.user.screen_name +'</a></strong>: '+ convertURLs(tweet.text) +'<br/><br style="clear:both;"/>'+ tweet.created_at +' (Retweets: '+ tweet.retweet_count +')'
             }
         });
 
-        map.setZoom(15);
-        map.setCenter(tweet.geo.coordinates[0], tweet.geo.coordinates[1]);
-        map.fitZoom();
+        // map.setZoom(15);
+        // map.setCenter(tweet.geo.coordinates[0], tweet.geo.coordinates[1]);
+        // map.fitZoom();
 
         tweetsAmount++;
     });
